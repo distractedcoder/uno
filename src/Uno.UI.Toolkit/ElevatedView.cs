@@ -46,6 +46,10 @@ namespace Uno.UI.Toolkit
 		public ElevatedView()
 		{
 			DefaultStyleKey = typeof(ElevatedView);
+
+#if !NETFX_CORE
+			Loaded += (snd, evt) => SynchronizeContentTemplatedParent();
+#endif
 		}
 
 		protected override void OnApplyTemplate()
@@ -104,7 +108,6 @@ namespace Uno.UI.Toolkit
 			get => (CornerRadius)GetValue(CornerRadiusProperty);
 			set => SetValue(CornerRadiusProperty, value);
 		}
-#endif
 
 		protected internal override void OnTemplatedParentChanged(DependencyPropertyChangedEventArgs e)
 		{
@@ -112,13 +115,6 @@ namespace Uno.UI.Toolkit
 
 			// This is required to ensure that FrameworkElement.FindName can dig through the tree after
 			// the control has been created.
-			SynchronizeContentTemplatedParent();
-		}
-
-		protected override void OnLoaded()
-		{
-			base.OnLoaded();
-
 			SynchronizeContentTemplatedParent();
 		}
 
@@ -133,7 +129,7 @@ namespace Uno.UI.Toolkit
 				content.TemplatedParent = this.TemplatedParent;
 			}
 		}
-
+#endif
 
 		private void UpdateElevation()
 		{
